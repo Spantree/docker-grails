@@ -4,8 +4,6 @@ MAINTAINER Cedric Hurst <cedric@spantree.net>
 
 ENV GRAILS_VERSION 3.0.0.M1
 
-echo "Hello world"
-
 # Install GVM package manager
 RUN curl -s api.gvmtool.net | bash
 
@@ -15,7 +13,8 @@ RUN wget --quiet https://github.com/grails/grails-core/releases/download/v${GRAI
   unzip grails-${GRAILS_VERSION}.zip && \
   mv grails-${GRAILS_VERSION} /opt/grails
 
-# Bootstrap dependencies for stock grails project
+# Bootstrap cached dependencies by creating and compiling a temporary Grails project
+# (must use underscore instead of hyphen in project name due to known issue in M1)
 WORKDIR /tmp
 RUN /opt/grails/bin/grails create-app tmp_app && \
   cd tmp_app && \
