@@ -1,4 +1,4 @@
-FROM dockerfile/java:oracle-java8
+FROM spantree/ubuntu-oraclejdk8:latest
 
 MAINTAINER Cedric Hurst <cedric@spantree.net>
 
@@ -7,8 +7,10 @@ ENV GRAILS_VERSION 3.0.0.M2
 # Install Grails
 WORKDIR /tmp
 RUN wget --quiet https://github.com/grails/grails-core/releases/download/v${GRAILS_VERSION}/grails-${GRAILS_VERSION}.zip && \
-  unzip grails-${GRAILS_VERSION}.zip && \
-  mv grails-${GRAILS_VERSION} /opt/grails
+  jar -xf grails-${GRAILS_VERSION}.zip && \
+  mv grails-${GRAILS_VERSION} /opt/grails && \
+  chmod a+x /opt/grails/bin/grails && \
+  rm -rf grails-${GRAILS_VERSION}.zip
 
 # Bootstrap dependencies by creating and compiling a temporary Grails project
 WORKDIR /tmp
@@ -16,11 +18,9 @@ RUN /opt/grails/bin/grails create-app tmp-app && \
   cd tmp-app && \
   /opt/grails/bin/grails compile && \
   cd .. && \
-  rm -Rf tmp-app
+  rm -Rf /tmp/*
 
 # Mount the app
-WORKDIR /
-RUN mkdir /app
 WORKDIR /app
 
 EXPOSE 8080

@@ -1,17 +1,16 @@
-FROM dockerfile/java:oracle-java8
+FROM spantree/ubuntu-oraclejdk8:latest
 
 MAINTAINER Cedric Hurst <cedric@spantree.net>
 
 ENV GRAILS_VERSION 3.0.0.M1
 
-# Install GVM package manager
-RUN curl -s api.gvmtool.net | bash
-
 # Install Grails
 WORKDIR /tmp
 RUN wget --quiet https://github.com/grails/grails-core/releases/download/v${GRAILS_VERSION}/grails-${GRAILS_VERSION}.zip && \
-  unzip grails-${GRAILS_VERSION}.zip && \
-  mv grails-${GRAILS_VERSION} /opt/grails
+  jar -xf grails-${GRAILS_VERSION}.zip && \
+  mv grails-${GRAILS_VERSION} /opt/grails && \
+  chmod a+x /opt/grails/bin/grails && \
+  rm -rf grails-${GRAILS_VERSION}.zip
 
 # Bootstrap cached dependencies by creating and compiling a temporary Grails project
 # (must use underscore instead of hyphen in project name due to known issue in M1)
@@ -20,11 +19,9 @@ RUN /opt/grails/bin/grails create-app tmp_app && \
   cd tmp_app && \
   /opt/grails/bin/grails compile && \
   cd .. && \
-  rm -Rf tmp_app
+  rm -Rf /tmp/*
 
 # Mount the app
-WORKDIR /
-RUN mkdir /app
 WORKDIR /app
 
 EXPOSE 8080
