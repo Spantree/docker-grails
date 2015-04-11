@@ -10,6 +10,7 @@ RUN wget --quiet https://github.com/grails/grails-core/releases/download/v${GRAI
   jar -xf grails-${GRAILS_VERSION}.zip && \
   mv grails-${GRAILS_VERSION} /opt/grails && \
   chmod a+x /opt/grails/bin/grails && \
+  find /opt/grails -iname "*-javadoc.jar" -o -iname "*-sources.jar" -exec rm -rf {} \; && \
   rm -rf grails-${GRAILS_VERSION}.zip
 
 # Bootstrap dependencies by creating and compiling a temporary Grails project
