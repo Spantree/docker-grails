@@ -3,6 +3,8 @@ FROM spantree/ubuntu-oraclejdk8:latest
 MAINTAINER Cedric Hurst <cedric@spantree.net>
 
 ENV GRAILS_VERSION 3.0.0.M2
+ENV GRAILS_HOME /opt/grails
+ENV PATH $PATH:$GRAILS_HOME/bin
 
 # Install Grails
 WORKDIR /tmp
@@ -14,7 +16,6 @@ RUN wget --quiet https://github.com/grails/grails-core/releases/download/v${GRAI
   rm -rf grails-${GRAILS_VERSION}.zip
 
 # Bootstrap dependencies by creating and compiling a temporary Grails project
-WORKDIR /tmp
 RUN /opt/grails/bin/grails create-app tmp-app && \
   cd tmp-app && \
   /opt/grails/bin/grails compile && \
