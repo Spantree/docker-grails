@@ -1,4 +1,4 @@
-FROM spantree/ubuntu-oraclejdk8:latest
+FROM spantree/ubuntu-oraclejdk8:u31b13
 
 MAINTAINER Cedric Hurst <cedric@spantree.net>
 
